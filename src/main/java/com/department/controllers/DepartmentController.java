@@ -3,6 +3,8 @@ package com.department.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,29 +29,33 @@ public class DepartmentController {
     }
 
     @GetMapping("/all")
-    public List<DepartmentDTO> getDept() {
-        return departmentService.getDept();
+    public ResponseEntity<List<DepartmentDTO>> getDept() {
+        return ResponseEntity.ok(departmentService.getDept());
     }
 
     @PostMapping
-    public DepartmentDTO createDept(@RequestBody DepartmentDTO departmentDTO) {
-        return departmentService.createDept(departmentDTO);
+    public ResponseEntity<DepartmentDTO> createDept(@RequestBody DepartmentDTO departmentDTO) {
+        return new ResponseEntity<>(departmentService.createDept(departmentDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public DepartmentDTO updateDept(@PathVariable long id, @RequestBody DepartmentDTO departmentDTO) {
+    public ResponseEntity<DepartmentDTO> updateDept(@PathVariable long id, @RequestBody DepartmentDTO departmentDTO) {
 
-        return departmentService.updateDept(id, departmentDTO);
+        return ResponseEntity.ok(departmentService.updateDept(id, departmentDTO));
     }
 
     @PatchMapping("{id}")
-    public DepartmentDTO updatePartialDept(@PathVariable long id, @RequestBody Map<String, Object> update) {
-        return departmentService.updatePartialDept(id, update);
+    public ResponseEntity<DepartmentDTO> updatePartialDept(@PathVariable long id,
+            @RequestBody Map<String, Object> update) {
+        return ResponseEntity.ok(departmentService.updatePartialDept(id, update));
     }
 
     @DeleteMapping("{id}")
-    public boolean deleteDept(@PathVariable long id) {
-        return departmentService.deleteDept(id);
+    public ResponseEntity<Boolean> deleteDept(@PathVariable long id) {
+        boolean gotDeleted = departmentService.deleteDept(id);
+        if (gotDeleted)
+            ResponseEntity.ok(gotDeleted);
+        return ResponseEntity.notFound().build();
     }
 
 }
